@@ -1,5 +1,7 @@
 #include <enet.h>
 #include <next.h>
+#include <next_address.h>
+#include <next_platform.h>
 #include <stdio.h>
 #include <string.h>
 #include <signal.h>
@@ -13,7 +15,7 @@ const char * bind_address = "0.0.0.0:50000";
 const char * server_address = "127.0.0.1:50000";
 const char * server_datacenter = "local";
 const char * server_backend_hostname = "prod.spacecats.net";
-const char * customer_private_key = "leN7D7+9vr3TEZexVmvbYzdH1hbpwBvioc6y1c9Dhwr4ZaTkEWyX2Li5Ph/UFrw8QS8hAD9SQZkuVP6x14tEcqxWppmrvbdn";
+const char * buyer_private_key = "leN7D7+9vr3TEZexVmvbYzdH1hbpwBvioc6y1c9Dhwr4ZaTkEWyX2Li5Ph/UFrw8QS8hAD9SQZkuVP6x14tEcqxWppmrvbdn";
 
 static volatile int quit = 0;
 
@@ -29,7 +31,7 @@ int main( int argc, char ** argv )
     next_config_t config;
     next_default_config( &config );
     strncpy( config.server_backend_hostname, server_backend_hostname, sizeof(config.server_backend_hostname) - 1 );
-    strncpy( config.customer_private_key, customer_private_key, sizeof(config.customer_private_key) - 1 );
+    strncpy( config.buyer_private_key, buyer_private_key, sizeof(config.buyer_private_key) - 1 );
 
     if ( next_init( NULL, &config ) != NEXT_OK )
     {

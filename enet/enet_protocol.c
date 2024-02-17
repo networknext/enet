@@ -9,6 +9,11 @@
 #include "enet_time.h"
 #include "enet.h"
 
+#if ENET_NETWORK_NEXT
+#include "next_address.h"
+#include "next_platform.h"
+#endif // #if ENET_NETWORK_NEXT
+
 static size_t commandSizes [ENET_PROTOCOL_COMMAND_COUNT] =
 {
     0,
@@ -1966,7 +1971,7 @@ enet_host_service (ENetHost * host, ENetEvent * event, enet_uint32 timeout)
             delay = 100;
         }
 
-        next_sleep( delay / 1000.0 );
+        next_platform_sleep( delay / 1000.0 );
 
         host -> serviceTime = enet_time_get ();
 

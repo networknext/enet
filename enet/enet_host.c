@@ -8,6 +8,8 @@
 
 #if ENET_NETWORK_NEXT
 
+#include "next_address.h"
+
 ENetAddress enet_address_from_next( const struct next_address_t * in )
 {
     next_assert( in );
@@ -157,7 +159,7 @@ enet_host_create (const ENetAddress * address, size_t peerCount, size_t channelL
     {
         next_printf( NEXT_LOG_LEVEL_INFO, "creating network next client" );
 
-        host->next_client = next_client_create( host, config->bind_address, enet_network_next_client_packet_received, NULL );
+        host->next_client = next_client_create( host, config->bind_address, enet_network_next_client_packet_received );
 
         if ( host->next_client == NULL )
         {
@@ -174,7 +176,7 @@ enet_host_create (const ENetAddress * address, size_t peerCount, size_t channelL
     {
         next_printf( NEXT_LOG_LEVEL_INFO, "creating network next server" );
 
-        host->next_server = next_server_create( host, config->server_address, config->bind_address, config->server_datacenter, enet_network_next_server_packet_received, NULL );
+        host->next_server = next_server_create( host, config->server_address, config->bind_address, config->server_datacenter, enet_network_next_server_packet_received );
 
         if ( !host->next_server )
         {
@@ -184,8 +186,9 @@ enet_host_create (const ENetAddress * address, size_t peerCount, size_t channelL
             return NULL;
         }
 
-        struct next_address_t server_address = next_server_address( host->next_server );
-        host->address = enet_address_from_next( &server_address );
+        const struct next_address_t * server_address = next_server_address( host->next_server );
+
+        host->address = enet_address_from_next( server_address );
     }
 
     next_printf( NEXT_LOG_LEVEL_INFO, "enet host address is %x:%d", host->address.host, host->address.port );

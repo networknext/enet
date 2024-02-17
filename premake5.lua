@@ -22,20 +22,21 @@ project "next"
 project "enet"
 	kind "StaticLib"
 	language "C"
+	cdialect "C99"
 	links { "next" }
 	files { "enet/*.c" }
 	includedirs { "enet", "next", "sodium" }
-	configuration "Debug"
+	filter "configurations:Debug"
 		targetsuffix "d"
 		defines({ "DEBUG" })
 		symbols "On"		
-	configuration "Release"
+	filter "configurations:Release"
+		optimize "Speed"
 		defines({ "NDEBUG" })
 		optimize "On"
-	configuration { "Debug", "x64" }
-		targetsuffix "64d"
-	configuration { "Release", "x64" }
-		targetsuffix "64"
+		editandcontinue "Off"
+	filter "system:windows"
+		location ("visualstudio")
 
 project "sodium"
 	kind "StaticLib"
@@ -65,7 +66,7 @@ project "sodium"
 	filter "system:windows"
 		disablewarnings { "4221", "4244", "4715", "4197", "4146", "4324", "4456", "4100", "4459", "4245" }
 		linkoptions { "/ignore:4221" }
-	configuration { "gmake" }
+	filter { "action:gmake" }
   		buildoptions { "-Wno-unused-parameter", "-Wno-unused-function", "-Wno-unknown-pragmas", "-Wno-unused-variable", "-Wno-type-limits" }
 
 project "client"
