@@ -19,6 +19,7 @@
 #include "sodium_crypto_generichash.h"
 #include "sodium_crypto_generichash_blake2b.h"
 #include "sodium_crypto_hash.h"
+#include "sodium_crypto_hash_sha256.h"
 #include "sodium_crypto_hash_sha512.h"
 #include "sodium_crypto_kx.h"
 #include "sodium_crypto_onetimeauth.h"

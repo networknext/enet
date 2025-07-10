@@ -1,23 +1,7 @@
 /*
-    Network Next. Copyright © 2017 - 2024 Network Next, Inc.
-
-    Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following 
-    conditions are met:
-
-    1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-
-    2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
-       and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-    3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote 
-       products derived from this software without specific prior written permission.
-
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, 
-    INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. 
-    IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR 
-    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; 
-    OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING 
-    NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    Network Next. Copyright © 2017 - 2025 Network Next, Inc.
+    
+    Licensed under the Network Next Source Available License 1.0
 */
 
 #ifndef NEXT_H
@@ -31,15 +15,17 @@
 #include <stddef.h>
 #include <stdbool.h>
 
+#define NEXT_ADVANCED_PACKET_FILTER                               0
+
 #if !defined( NEXT_DEVELOPMENT )
 #define NEXT_DEVELOPMENT 0
 #endif // #if !defined( NEXT_DEVELOPMENT )
 
 #if !NEXT_DEVELOPMENT
 
-    #define NEXT_VERSION_FULL                               "1.0.0"
+    #define NEXT_VERSION_FULL                               "1.2.0"
     #define NEXT_VERSION_MAJOR_INT                                1
-    #define NEXT_VERSION_MINOR_INT                                0
+    #define NEXT_VERSION_MINOR_INT                                2
     #define NEXT_VERSION_PATCH_INT                                0
 
 #else // !NEXT_DEVELOPMENT
@@ -51,12 +37,12 @@
 
 #endif // !NEXT_DEVELOPMENT
 
+#define NEXT_MTU                                               1200
+
+#define NEXT_MAX_PACKET_BYTES                                  1384
+
 #define NEXT_OK                                                   0
 #define NEXT_ERROR                                               -1
-
-#define NEXT_MTU                                               1300
-
-#define NEXT_MAX_PACKET_BYTES                                  4096
 
 #define NEXT_LOG_LEVEL_NONE                                       0
 #define NEXT_LOG_LEVEL_ERROR                                      1
@@ -501,6 +487,14 @@ NEXT_EXPORT_FUNC void next_server_set_send_packet_to_address_callback( struct ne
 NEXT_EXPORT_FUNC void next_server_set_payload_receive_callback( struct next_server_t * server, int (*callback) ( void * data, const struct next_address_t * address, const uint8_t * payload_data, int payload_bytes ), void * callback_data );
 
 NEXT_EXPORT_FUNC bool next_server_direct_only( struct next_server_t * server );
+
+// -----------------------------------------
+
+NEXT_EXPORT_FUNC bool next_packet_tagging_can_be_enabled();
+
+NEXT_EXPORT_FUNC void next_enable_packet_tagging();
+
+NEXT_EXPORT_FUNC void next_disable_packet_tagging();
 
 // -----------------------------------------
 

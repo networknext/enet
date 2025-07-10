@@ -1,23 +1,7 @@
 /*
-    Network Next. Copyright © 2017 - 2024 Network Next, Inc.
-
-    Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following
-    conditions are met:
-
-    1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
-
-    2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions
-       and the following disclaimer in the documentation and/or other materials provided with the distribution.
-
-    3. Neither the name of the copyright holder nor the names of its contributors may be used to endorse or promote
-       products derived from this software without specific prior written permission.
-
-    THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-    INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
-    IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-    CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
-    OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
-    NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+    Network Next. Copyright © 2017 - 2025 Network Next, Inc.
+    
+    Licensed under the Network Next Source Available License 1.0
 */
 
 #include "next.h"
@@ -36,7 +20,6 @@
 #include "next_ping_history.h"
 #include "next_upgrade_token.h"
 #include "next_route_token.h"
-#include "next_continue_token.h"
 #include "next_header.h"
 #include "next_packet_filter.h"
 #include "next_bandwidth_limiter.h"
@@ -348,6 +331,8 @@ int next_init( void * context, next_config_t * config_in )
         return NEXT_ERROR;
     }
 
+    next_printf( NEXT_LOG_LEVEL_INFO, "network next version is %s", NEXT_VERSION_FULL );
+
     const char * platform_string = next_platform_string( next_platform_id() );
     const char * connection_string = next_connection_string( next_platform_connection_type() );
 
@@ -560,12 +545,18 @@ int next_init( void * context, next_config_t * config_in )
     next_signed_packets[NEXT_BACKEND_SERVER_UPDATE_RESPONSE_PACKET] = 1;
     next_signed_packets[NEXT_BACKEND_SESSION_UPDATE_REQUEST_PACKET] = 1;
     next_signed_packets[NEXT_BACKEND_SESSION_UPDATE_RESPONSE_PACKET] = 1;
+    next_signed_packets[NEXT_BACKEND_CLIENT_RELAY_REQUEST_PACKET] = 1;
+    next_signed_packets[NEXT_BACKEND_CLIENT_RELAY_RESPONSE_PACKET] = 1;
+    next_signed_packets[NEXT_BACKEND_SERVER_RELAY_REQUEST_PACKET] = 1;
+    next_signed_packets[NEXT_BACKEND_SERVER_RELAY_RESPONSE_PACKET] = 1;
 
     next_encrypted_packets[NEXT_DIRECT_PING_PACKET] = 1;
     next_encrypted_packets[NEXT_DIRECT_PONG_PACKET] = 1;
     next_encrypted_packets[NEXT_CLIENT_STATS_PACKET] = 1;
     next_encrypted_packets[NEXT_ROUTE_UPDATE_PACKET] = 1;
-    next_encrypted_packets[NEXT_ROUTE_UPDATE_ACK_PACKET] = 1;
+    next_encrypted_packets[NEXT_ROUTE_ACK_PACKET] = 1;
+    next_encrypted_packets[NEXT_CLIENT_RELAY_UPDATE_PACKET] = 1;
+    next_encrypted_packets[NEXT_CLIENT_RELAY_ACK_PACKET] = 1;
 
     return NEXT_OK;
 }
@@ -580,6 +571,34 @@ void next_term()
 #if NEXT_DEVELOPMENT
 bool next_packet_loss;
 #endif // #if NEXT_DEVELOPMENT
+
+// ---------------------------------------------------------------
+
+// IMPORTANT: off by default.
+bool next_packet_tagging_enabled = false;
+
+bool next_packet_tagging_can_be_enabled()
+{
+    return next_platform_packet_tagging_can_be_enabled();
+}
+
+void next_enable_packet_tagging()
+{
+    if ( next_platform_packet_tagging_can_be_enabled() )
+    {
+        next_printf( NEXT_LOG_LEVEL_INFO, "enabled packet tagging" );
+        next_packet_tagging_enabled = true;
+    }
+}
+
+void next_disable_packet_tagging()
+{
+    if ( next_platform_packet_tagging_can_be_enabled() )
+    {
+        next_printf( NEXT_LOG_LEVEL_INFO, "disabled packet tagging" );
+        next_packet_tagging_enabled = false;
+    }
+}
 
 // ---------------------------------------------------------------
 
